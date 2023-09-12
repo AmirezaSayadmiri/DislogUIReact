@@ -2,8 +2,8 @@ import { Paper, Stack } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as yup from "yup";
-import TextError from "../TextError";
-import axios from "../../api/axios";
+import TextError from "../../TextError";
+import axios from "../../../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 
 const BaseRegister = () => {
@@ -40,7 +40,7 @@ const BaseRegister = () => {
         confirm_password,
       });
       if(response.status===201){
-        navigate('/register/activation')
+        navigate('/register/activation/?email='+email)
       }
     } catch (err) {
       err.response.data.errors.map((err) => {

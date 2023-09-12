@@ -2,10 +2,11 @@ import { Container, Paper, Stack } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as yup from "yup";
-import TextError from "../TextError";
-import axios from "../../api/axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth";
+import TextError from "../../TextError";
+import axios from "../../../api/axios";
+
 
 const ResetPassword = () => {
   const navigate = useNavigate();

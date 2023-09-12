@@ -1,18 +1,24 @@
-import React, { useEffect } from "react";
+import React, { forwardRef, useEffect } from "react";
 import Header from "./components/Header/Header";
 import { createGlobalStyle } from "styled-components";
 import { Route, Routes } from "react-router-dom";
-import Register from "./components/Auth/Register";
-import BaseRegister from "./components/Auth/BaseRegister";
-import Activation from "./components/Auth/Activation";
-import { useDispatch } from "react-redux";
+import Register from "./components/Auth/Register/Register";
+import BaseRegister from "./components/Auth/Register/BaseRegister";
+import Activation from "./components/Auth/Register/Activation";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuth } from "./app/features/auth/authSlice";
 import Logout from "./components/Auth/Logout";
 import Login from "./components/Auth/Login";
 import Home from "./components/Home";
-import ResetPassword from "./components/Auth/ResetPassword";
+import ResetPassword from "./components/Auth/ResetPassword/ResetPassword";
 import IsAuth from "./components/Auth/IsAuth";
-import ResetPasswordNew from "./components/Auth/ResetPasswordNew";
+import ResetPasswordNew from "./components/Auth/ResetPassword/ResetPasswordNew";
+import MuiAlert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
+import { hideSnackBar } from "./app/features/snackBar/snackBarSlice";
+import Dashboard from "./components/Account/Dashboard/Dashboard";
+import Profile from "./components/Account/Dashboard/Profile";
+import DashboardEdit from "./components/Account/Dashboard/DashboardEdit";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -23,6 +29,7 @@ body{
 
 const App = () => {
   const dispatch = useDispatch();
+  const snackBar = useSelector((state) => state.snackBar);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -35,10 +42,27 @@ const App = () => {
     }
   }, []);
 
+  const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="standard" {...props} />;
+  });
+
   return (
     <>
       <GlobalStyles />
+      <Snackbar
+        open={snackBar.open}
+        onClose={() => dispatch(hideSnackBar())}
+        autoHideDuration={2000}
+      >
+        <Alert
+          severity={snackBar.severity}
+          onClose={() => dispatch(hideSnackBar())}
+        >
+          <h1>{snackBar.value}</h1>
+        </Alert>
+      </Snackbar>
       <Header />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -84,6 +108,18 @@ const App = () => {
             </IsAuth>
           }
         />
+
+        <Route
+          path="dashboard"
+          element={
+            <IsAuth guest={false}>
+              <Dashboard />
+            </IsAuth>
+          }
+        >
+          <Route index element={<Profile />} />
+          <Route path="edit" element={<DashboardEdit />} />
+        </Route>
       </Routes>
     </>
   );

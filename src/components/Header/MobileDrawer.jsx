@@ -1,4 +1,4 @@
-import { ExpandMore } from "@mui/icons-material";
+import { AccountCircle, ExpandMore } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -43,9 +43,14 @@ const MobileDrawer = ({
             </Typography>
             <Stack gap={1}>
               {isLoggedIn ? (
-                <Button variant="contained" href="/logout" color="error">
-                  خروج
-                </Button>
+                <>
+                  <Button variant="contained" href="/dashboard" startIcon={<AccountCircle />} >
+                    داشبورد
+                  </Button>
+                  <Button variant="outlined" href="/logout" color="error">
+                    خروج
+                  </Button>
+                </>
               ) : (
                 <>
                   <Button variant="outlined" href="/login">

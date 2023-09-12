@@ -6,8 +6,11 @@ import TextError from "../TextError";
 import axios from "../../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { showSnackBar } from "../../app/features/snackBar/snackBarSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const { login } = useAuth();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({
@@ -37,8 +40,15 @@ const Login = () => {
         const {
           data: { user, userId, access, refresh },
         } = response;
+        dispatch(
+          showSnackBar({
+            value: "در حال ورود...",
+            severity: "success",
+          })
+        );
+
         login(user, userId, access, refresh);
-        navigate("/dashboard");
+        navigate("/");
       }
     } catch (err) {
       if (!err.response.data.message) {
@@ -110,7 +120,10 @@ const Login = () => {
                   >
                     ورود
                   </button>
-                  <Link to="/reset-password" className="text-blue-800 text-[1rem] mt-4">
+                  <Link
+                    to="/reset-password"
+                    className="text-blue-800 text-[1rem] mt-4"
+                  >
                     رمز عبورم را فراموش کرده ام
                   </Link>
                   <Link

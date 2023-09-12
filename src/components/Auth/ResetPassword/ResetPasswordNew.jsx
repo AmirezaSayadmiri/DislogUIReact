@@ -2,11 +2,11 @@ import { Container, Paper, Snackbar, Stack } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { forwardRef, useEffect, useState } from "react";
 import * as yup from "yup";
-import TextError from "../TextError";
-import axios from "../../api/axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
 import MuiAlert from "@mui/material/Alert";
+import TextError from "../../TextError";
+import useAuth from "../../../hooks/useAuth";
+import axios from "../../../api/axios";
 
 const ResetPasswordNew = () => {
   const [openSnackBar, setOpenSnackBar] = useState(false);

@@ -1,5 +1,6 @@
 import {
   AlertTitle,
+  Button,
   Container,
   Paper,
   Snackbar,
@@ -8,16 +9,21 @@ import {
 } from "@mui/material";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import MuiAlert from "@mui/material/Alert";
-import { useNavigate } from "react-router-dom";
-import TextError from "../TextError";
-import useAuth from "../../hooks/useAuth";
-import axios from "../../api/axios";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import TextError from "../../TextError";
+import useAuth from "../../..//hooks/useAuth";
+import axios from "../../../api/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { showSnackBar } from "../../../app/features/snackBar/snackBarSlice";
 
 const Activation = () => {
   const { login, logout } = useAuth();
+  const [search, setSearch] = useSearchParams();
+  const email = search.get("email");
+  const [timer, setTimer] = useState(60);
+  const [showTimer, setShowTimer] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [openSnackBar, setOpenSnackBar] = useState(false);
   const [inp1, setInp1] = useState("");
   const [inp2, setInp2] = useState("");
   const [inp3, setInp3] = useState("");
@@ -40,19 +46,36 @@ const Activation = () => {
       }
     }
   };
-  const handleCloseSnackBar = () => setOpenSnackBar(false);
 
-  const Alert = forwardRef(function Alert(props, ref) {
-    return (
-      <MuiAlert
-        severity="success"
-        elevation={6}
-        ref={ref}
-        variant="standard"
-        {...props}
-      />
-    );
-  });
+  const dispatch = useDispatch()
+
+
+  const handleResendEmail = async () => {
+    if (!showTimer) {
+      try {
+        const res = await axios.post("/resend-email-activation-code", {
+          email,
+        });
+      } catch (err) {
+        console.log(err);
+        dispatch(showSnackBar({value:"خطایی رخ داد لطفا دوباره امتحان کنید",severity:"error"}))
+      }
+
+      dispatch(showSnackBar({value:"کد تاییدیه مجدد به ایمیل شما ارسال شد",severity:"success"}))
+
+      setShowTimer(true);
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+       setTimeout(() => {
+        clearInterval(interval);
+        setTimer(60);
+        setShowTimer(false);
+      },60000);
+    } else {
+      dispatch(showSnackBar({value:`لطفا ${timer} ثانیه صبر کنید`,severity:"warning"}))
+    }
+  };
 
   useEffect(() => {
     if (inp1 && inp2 && inp3 && inp4 && inp5) {
@@ -64,14 +87,15 @@ const Activation = () => {
             data: { userId, user, access, refresh },
           } = await axios.post("/register/activation", { activation_code });
           if (status === 200) {
-            setOpenSnackBar(true);
+            dispatch(showSnackBar({value:"اکانت شما با موفقیت ساخته شد. در حال ورود...",severity:"success"}))
+
             login(user, userId, access, refresh);
             setTimeout(() => {
-              navigate("/account/dashboard");
+              navigate("/");
             }, 2000);
           }
         } catch (err) {
-          console.log(err)
+          console.log(err);
           setError(
             err.response.status === 400
               ? "کد وارد شده اشتباه میباشد"
@@ -85,15 +109,6 @@ const Activation = () => {
 
   return (
     <Container sx={{ marginY: "80px" }}>
-      <Snackbar
-        open={openSnackBar}
-        onClose={handleCloseSnackBar}
-        autoHideDuration={2000}
-      >
-        <Alert onClose={handleCloseSnackBar}>
-          <h1>اکانت شما با موفقیت ساخته شد</h1>
-        </Alert>
-      </Snackbar>
 
       <Paper className="p-10">
         <Stack direction="column">
@@ -154,6 +169,15 @@ const Activation = () => {
           </Stack>
           <div className="my-2 text-center">
             <TextError>{error}</TextError>
+          </div>
+          <div className="flex justify-start items-center mt-5 mx-5 gap-2">
+            <button
+              onClick={handleResendEmail}
+              className={`${showTimer ? "text-gray-500" : "text-blue-700"}`}
+            >
+              ارسال دوباره کد
+            </button>
+            <span className="text-gray-500">{showTimer ? timer : ""}</span>
           </div>
         </Stack>
       </Paper>

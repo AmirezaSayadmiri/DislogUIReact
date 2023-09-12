@@ -8,7 +8,7 @@ const Home = () => {
     
   }, []);
 
-  return <div>Home</div>;
+  return <div className="text-white text-center my-10">Home</div>;
 };
 
 export default Home;
