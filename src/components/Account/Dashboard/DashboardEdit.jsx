@@ -121,7 +121,7 @@ const DashboardEdit = () => {
 
   const handleFormSubmit = async () => {
     try {
-      const res = await privateAxios.post("/profile/edit", {
+      const res = await privateAxios.post("/profile", {
         bio: newProfile.bio,
         age: newProfile.age,
         gender: newProfile.gender,
