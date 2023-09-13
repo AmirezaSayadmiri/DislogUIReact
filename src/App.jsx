@@ -19,6 +19,7 @@ import { hideSnackBar } from "./app/features/snackBar/snackBarSlice";
 import Dashboard from "./components/Account/Dashboard/Dashboard";
 import Profile from "./components/Account/Dashboard/Profile";
 import DashboardEdit from "./components/Account/Dashboard/DashboardEdit";
+import ChangePassword from "./components/Account/Dashboard/ChangePassword";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -119,6 +120,7 @@ const App = () => {
         >
           <Route index element={<Profile />} />
           <Route path="edit" element={<DashboardEdit />} />
+          <Route path="change-password" element={<ChangePassword />} />
         </Route>
       </Routes>
     </>

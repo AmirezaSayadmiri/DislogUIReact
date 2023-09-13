@@ -48,9 +48,9 @@ const ResetPasswordNew = () => {
         reset_password_token,
       });
       setOpenSnackBar(true);
-      setTimeout(()=>{
-          navigate("/login");
-      },2000)
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
       err.response.data.errors.map((err) => {
         setErrors((prev) => {

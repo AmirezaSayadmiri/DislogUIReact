@@ -30,7 +30,7 @@ const DashboardEdit = () => {
 
   const getUserData = async () => {
     try {
-      const res = await privateAxios.post("/profile");
+      const res = await privateAxios.get("/profile");
       if (res.status === 200) {
         setUser(res.data.user);
         setProfile(res.data.profile);
@@ -65,7 +65,7 @@ const DashboardEdit = () => {
 
       try {
         const res = await privateAxios.post(
-          "/profile/set-user-image/" + user.id,
+          "/profile/set-user-image",
           formData,
           {
             headers: {
@@ -97,7 +97,7 @@ const DashboardEdit = () => {
   const handleDeletePofileImage = async () => {
     try {
       const res = await privateAxios.delete(
-        "/profile/delete-user-image/" + user.id
+        "/profile/delete-user-image/"
       );
       if (res.status === 200) {
         getUserData();

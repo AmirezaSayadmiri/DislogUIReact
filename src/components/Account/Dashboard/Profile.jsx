@@ -10,7 +10,7 @@ const Profile = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const res = await privateAxios.post("/profile");
+        const res = await privateAxios.get("/profile");
         if (res.status === 200) {
           setUser(res.data.user);
           setProfile(res.data.profile);
