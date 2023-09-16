@@ -34,7 +34,7 @@ const Profile = () => {
       <p className="m-5 text-gray-500">
         بیوگرافی: {profile.bio || "مشخص نشده"}
       </p>
-      <div className="border border-2 p-4 py-10 mx-2 flex flex-col gap-2">
+      <div className="border-2 p-4 py-10 mx-2 flex flex-col gap-2">
         <h1>ایمیل : {user.email}</h1>
         <h1>جنسیت : {profile.gender || "مشخص نشده"}</h1>
         <h1>سن : {profile.age || "مشخص نشده"}</h1>

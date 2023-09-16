@@ -20,6 +20,8 @@ import Dashboard from "./components/Account/Dashboard/Dashboard";
 import Profile from "./components/Account/Dashboard/Profile";
 import DashboardEdit from "./components/Account/Dashboard/DashboardEdit";
 import ChangePassword from "./components/Account/Dashboard/ChangePassword";
+import User from "./components/Account/User";
+import NotFound from "./components/NotFound";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -122,6 +124,10 @@ const App = () => {
           <Route path="edit" element={<DashboardEdit />} />
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
+
+        <Route path="users/:username" element={<User />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
