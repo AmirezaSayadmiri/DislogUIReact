@@ -22,6 +22,7 @@ import DashboardEdit from "./components/Account/Dashboard/DashboardEdit";
 import ChangePassword from "./components/Account/Dashboard/ChangePassword";
 import User from "./components/Account/User";
 import NotFound from "./components/NotFound";
+import AddQuestion from "./components/Question/AddQuestion";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -31,106 +32,108 @@ body{
 `;
 
 const App = () => {
-  const dispatch = useDispatch();
-  const snackBar = useSelector((state) => state.snackBar);
+    const dispatch = useDispatch();
+    const snackBar = useSelector((state) => state.snackBar);
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const refresh = localStorage.getItem("refresh");
-    const user = localStorage.getItem("user");
-    const userId = localStorage.getItem("userId");
-    const access = localStorage.getItem("access");
-    if (isLoggedIn) {
-      dispatch(setAuth({ isLoggedIn, user, userId, access, refresh }));
-    }
-  }, []);
+    useEffect(() => {
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        const refresh = localStorage.getItem("refresh");
+        const user = localStorage.getItem("user");
+        const userId = localStorage.getItem("userId");
+        const access = localStorage.getItem("access");
+        if (isLoggedIn) {
+            dispatch(setAuth({ isLoggedIn, user, userId, access, refresh }));
+        }
+    }, []);
 
-  const Alert = forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="standard" {...props} />;
-  });
+    const Alert = forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="standard" {...props} />;
+    });
 
-  return (
-    <>
-      <GlobalStyles />
-      <Snackbar
-        open={snackBar.open}
-        onClose={() => dispatch(hideSnackBar())}
-        autoHideDuration={2000}
-      >
-        <Alert
-          severity={snackBar.severity}
-          onClose={() => dispatch(hideSnackBar())}
-        >
-          <h1>{snackBar.value}</h1>
-        </Alert>
-      </Snackbar>
-      <Header />
+    return (
+        <>
+            <GlobalStyles />
+            <Snackbar open={snackBar.open} onClose={() => dispatch(hideSnackBar())} autoHideDuration={2000}>
+                <Alert severity={snackBar.severity} onClose={() => dispatch(hideSnackBar())}>
+                    <h1>{snackBar.value}</h1>
+                </Alert>
+            </Snackbar>
+            <Header />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/register"
-          element={
-            <IsAuth guest={true}>
-              <Register />
-            </IsAuth>
-          }
-        >
-          <Route index element={<BaseRegister />} />
-          <Route path="activation" element={<Activation />} />
-        </Route>
-        <Route
-          path="login"
-          element={
-            <IsAuth guest={true}>
-              <Login />
-            </IsAuth>
-          }
-        />
-        <Route
-          path="logout"
-          element={
-            <IsAuth guest={false}>
-              <Logout />
-            </IsAuth>
-          }
-        />
-        <Route
-          path="reset-password"
-          element={
-            <IsAuth guest={true}>
-              <ResetPassword />
-            </IsAuth>
-          }
-        />
-        <Route
-          path="reset-password/new/:token"
-          element={
-            <IsAuth guest={true}>
-              <ResetPasswordNew />
-            </IsAuth>
-          }
-        />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route
+                    path="/register"
+                    element={
+                        <IsAuth guest={true}>
+                            <Register />
+                        </IsAuth>
+                    }
+                >
+                    <Route index element={<BaseRegister />} />
+                    <Route path="activation" element={<Activation />} />
+                </Route>
+                <Route
+                    path="login"
+                    element={
+                        <IsAuth guest={true}>
+                            <Login />
+                        </IsAuth>
+                    }
+                />
+                <Route
+                    path="logout"
+                    element={
+                        <IsAuth guest={false}>
+                            <Logout />
+                        </IsAuth>
+                    }
+                />
+                <Route
+                    path="reset-password"
+                    element={
+                        <IsAuth guest={true}>
+                            <ResetPassword />
+                        </IsAuth>
+                    }
+                />
+                <Route
+                    path="reset-password/new/:token"
+                    element={
+                        <IsAuth guest={true}>
+                            <ResetPasswordNew />
+                        </IsAuth>
+                    }
+                />
 
-        <Route
-          path="dashboard"
-          element={
-            <IsAuth guest={false}>
-              <Dashboard />
-            </IsAuth>
-          }
-        >
-          <Route index element={<Profile />} />
-          <Route path="edit" element={<DashboardEdit />} />
-          <Route path="change-password" element={<ChangePassword />} />
-        </Route>
+                <Route
+                    path="dashboard"
+                    element={
+                        <IsAuth guest={false}>
+                            <Dashboard />
+                        </IsAuth>
+                    }
+                >
+                    <Route index element={<Profile />} />
+                    <Route path="edit" element={<DashboardEdit />} />
+                    <Route path="change-password" element={<ChangePassword />} />
+                </Route>
 
-        <Route path="users/:username" element={<User />} />
+                <Route path="users/:username" element={<User />} />
+                
+                <Route
+                    path="ask-question"
+                    element={
+                        <IsAuth guest={false}>
+                            <AddQuestion />
+                        </IsAuth>
+                    }
+                />
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
-  );
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </>
+    );
 };
 
 export default App;
