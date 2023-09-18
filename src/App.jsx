@@ -23,6 +23,7 @@ import ChangePassword from "./components/Account/Dashboard/ChangePassword";
 import User from "./components/Account/User";
 import NotFound from "./components/NotFound";
 import AddQuestion from "./components/Question/AddQuestion";
+import Question from "./components/Question/Question";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -129,6 +130,8 @@ const App = () => {
                         </IsAuth>
                     }
                 />
+
+                <Route path="questions/:slug" element={<Question />} />
 
                 <Route path="*" element={<NotFound />} />
             </Routes>

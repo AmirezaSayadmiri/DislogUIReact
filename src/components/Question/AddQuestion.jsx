@@ -73,7 +73,7 @@ const AddQuestion = () => {
                         console.log(err);
                         dispatch(
                             showSnackBar({
-                                severity: "success",
+                                severity: "error",
                                 value:
                                     err.response.data.errors.map((error) => error.msg).join("\n") +
                                     "\n" +
@@ -89,7 +89,7 @@ const AddQuestion = () => {
             console.log(err);
             dispatch(
                 showSnackBar({
-                    severity: "success",
+                    severity: "error",
                     value:
                         err.response.data.errors.map((error) => error.msg).join("\n") +
                         "\n" +

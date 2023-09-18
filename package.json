@@ -16,6 +16,7 @@
     "@mui/material": "^5.14.7",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.5.0",
+    "farvardin": "^1.0.3",
     "formik": "^2.4.3",
     "jss-rtl": "^0.3.0",
     "react": "^18.2.0",
