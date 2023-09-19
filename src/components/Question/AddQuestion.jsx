@@ -9,6 +9,9 @@ import TextError from "../TextError";
 import { useNavigate } from "react-router-dom";
 
 const AddQuestion = () => {
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [tagsError, setTagsError] = useState("");
     const [categories, setCategories] = useState([]);
     const fileInputRef = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
@@ -17,29 +20,33 @@ const AddQuestion = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getCategories = async () => {
+        const getCategoriesAndTags = async () => {
             try {
                 const res = await privateAxios.get("/categories");
                 if (res.status === 200) {
                     setCategories(res.data.categories);
                 }
+                const res2 = await privateAxios.get("/tags");
+                if (res2.status === 200) {
+                    setTags(res2.data.tags);
+                }
             } catch (err) {
                 console.log(err);
             }
         };
-        getCategories();
+        getCategoriesAndTags();
     }, []);
 
     const initialValues = {
         title: "",
         body: "",
-        categoryId: "",
+        CategoryId: "",
     };
 
     const validationSchema = yup.object({
         title: yup.string().required("لطفا عنوان سوال خود را وارد کنید"),
         body: yup.string().required("لطفا متن سوال خود را وارد کنید"),
-        categoryId: yup.number("دسته بندی اشتباه است").required("لطفا دسته بندی سوال خود را انتخاب کنید"),
+        CategoryId: yup.number("دسته بندی اشتباه است").required("لطفا دسته بندی سوال خود را انتخاب کنید"),
     });
 
     const handlImageChange = (e) => {
@@ -47,9 +54,12 @@ const AddQuestion = () => {
         setSelectedImage(file);
     };
 
-    const onSubmit = async ({ title, body, categoryId }) => {
+    const onSubmit = async ({ title, body, CategoryId }) => {
+        if (selectedTags.length < 2) {
+            return setTagsError("لطفا حداقل دو تگ انتخاب کنید");
+        }
         try {
-            const res = await privateAxios.post("/questions", { title, body, categoryId });
+            const res = await privateAxios.post("/questions", { title, body, CategoryId, tags: selectedTags });
             if (res.status === 201) {
                 dispatch(
                     showSnackBar({
@@ -99,6 +109,15 @@ const AddQuestion = () => {
         }
     };
 
+    const handleSelectTag = (id) => {
+        const tag = selectedTags.find((tag) => tag == id);
+        if (tag) {
+            setSelectedTags((prev) => prev.filter((t) => t != id));
+        } else {
+            setSelectedTags((prev) => [...prev, id]);
+        }
+    };
+
     return (
         <div className="p-10">
             <Paper className="p-10 lg:mx-10 flex flex-col justify-center items-center gap-4">
@@ -129,7 +148,7 @@ const AddQuestion = () => {
                         </div>
 
                         <div>
-                            <Field name="categoryId">
+                            <Field name="CategoryId">
                                 {({ field }) => {
                                     return (
                                         <select className="border-2 p-2 w-full" {...field} id="">
@@ -143,7 +162,25 @@ const AddQuestion = () => {
                                     );
                                 }}
                             </Field>
-                            <ErrorMessage name="categoryId" component={TextError} />
+                            <ErrorMessage name="CategoryId" component={TextError} />
+                        </div>
+
+                        <div className="flex flex-col gap-2 my-3">
+                            <label htmlFor="">تگ ها:</label>
+                            <div className="flex gap-2">
+                                {tags.map((tag) => (
+                                    <div
+                                        onClick={() => handleSelectTag(tag.id)}
+                                        key={tag.id}
+                                        className={`border transition-all border-black cursor-pointer p-2 rounded-lg ${
+                                            selectedTags.find((t) => t == tag.id) ? "bg-blue-500 text-white" : ""
+                                        }`}
+                                    >
+                                        {tag.name}
+                                    </div>
+                                ))}
+                            </div>
+                            <TextError>{tagsError}</TextError>
                         </div>
 
                         <div className="">

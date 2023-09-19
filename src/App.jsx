@@ -131,7 +131,7 @@ const App = () => {
                     }
                 />
 
-                <Route path="questions/:slug" element={<Question />} />
+                <Route path="questions/:slug/:id" element={<Question />} />
 
                 <Route path="*" element={<NotFound />} />
             </Routes>

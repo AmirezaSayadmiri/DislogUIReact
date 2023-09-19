@@ -8,7 +8,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import TextError from "../TextError";
 import { useNavigate } from "react-router-dom";
 
-const AddAnswer = ({ QuestionId }) => {
+const AddAnswer = ({ QuestionId, getQuestion }) => {
     const fileInputRef = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
 
@@ -47,6 +47,9 @@ const AddAnswer = ({ QuestionId }) => {
                                 "Content-Type": "multipart/form-data",
                             },
                         });
+                        if(res2.status===200){
+                            getQuestion()
+                        }
                     } catch (err) {
                         console.log(err);
                         dispatch(
@@ -59,9 +62,9 @@ const AddAnswer = ({ QuestionId }) => {
                             })
                         );
                     }
-                } else {
-                    navigate("/");
-                }
+                }else{
+                    getQuestion()
+                } 
             }
         } catch (err) {
             console.log(err);

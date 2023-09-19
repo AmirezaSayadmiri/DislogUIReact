@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import NotFound from "../NotFound";
 import axios from "../../api/axios";
-import { Avatar, Icon, Paper } from "@mui/material";
+import { Avatar, Button, Icon, Paper } from "@mui/material";
 import farvardin from "farvardin";
 import { ThumbDownAlt, ThumbUpAlt, Visibility } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,10 +12,8 @@ import AddAnswer from "../Answer/AddAnswer";
 import Answer from "../Answer/Answer";
 
 const Question = () => {
-    const { slug } = useParams();
+    const { slug, id } = useParams();
     const [question, setQuestion] = useState({});
-    const [answers, setAnswers] = useState([]);
-    const [profile, setProfile] = useState({});
     const [notFound, setNotFound] = useState(false);
 
     const dispatch = useDispatch();
@@ -23,11 +21,9 @@ const Question = () => {
 
     const getQuestion = async () => {
         try {
-            const res = await axios.get("/questions/" + slug);
+            const res = await axios.get("/questions/" + slug + "/" + id);
             if (res.status === 200) {
                 setQuestion(res.data.question);
-                setProfile(res.data.profile);
-                setAnswers(res.data.answers);
                 return res.data.question.id;
             }
         } catch (err) {
@@ -81,13 +77,35 @@ const Question = () => {
         }
     };
 
+    const handleClose = async () => {
+        try {
+            const res = await privateAxios.post("/questions/" + question.id + "/close");
+            if (res.status === 200) {
+                dispatch(showSnackBar({ severity: "success", value: res.data.message }));
+                getQuestion();
+            }
+        } catch (err) {
+            console.log(err);
+            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد لطفا دوباره امتحان کنید" }));
+        }
+    };
+
     if (notFound || !question.id) {
         return <NotFound />;
     }
 
     return (
         <Paper className="p-10 m-10">
-            <div>
+            <div className="bg-blue-100 border-2 p-10">
+                <div className="flex justify-end">
+                    {question.is_closed ? (
+                        <span className="text-gray-400">سوال بسته شده</span>
+                    ) : (
+                        <Button variant="contained" color="warning" onClick={handleClose}>
+                            بستن سوال
+                        </Button>
+                    )}
+                </div>
                 <div className="flex flex-col">
                     <h1 className="flex gap-2 text-gray-400">
                         پرسیده شده در
@@ -103,6 +121,10 @@ const Question = () => {
                     <div className="flex gap-1 items-center text-gray-400">
                         تعداد بازدید:
                         <span className="">{question.views}</span>
+                    </div>
+                    <div className="flex gap-1 items-center text-gray-400">
+                        دسته بندی:
+                        <span className="">{question.Category.name}</span>
                     </div>
                 </div>
                 <div className="flex mb-5 justify-end">
@@ -128,30 +150,53 @@ const Question = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Avatar src={profile.image && `http://localhost:8000/${profile.image}`} />
-                    <h1>{question.title}</h1>
+                    <Avatar
+                        src={
+                            question.User.UserProfile.image &&
+                            `http://localhost:8000/${question.User.UserProfile.image}`
+                        }
+                    />
+                    <h1>{question.User.username}</h1>
                 </div>
 
-                <div className="my-4 flex justify-center">
+                <div className="my-4 flex flex-col justify-center items-center gap-2">
+                    <h1 className="text-blue-500 text-2xl">{question.title}</h1>
                     <img src={question.image && `http://localhost:8000/${question.image}`} />
                 </div>
 
                 <p className="m-10">{question.body}</p>
+
+                <div className="flex flex-col gap-2">
+                    <h1>تگ ها:</h1>
+                    <div className="flex gap-1">
+                        {question.Tag.map((tag) => (
+                            <span
+                                key={tag.id}
+                                className="border-2 w-[90px] text-center bg-yellow-200 px-2 py-1 text-black"
+                            >
+                                {tag.name}
+                            </span>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <div className="w-full">
-                {auth.isLoggedIn ? (
-                    <AddAnswer QuestionId={question.id} />
+                {auth.isLoggedIn && !question.is_closed ? (
+                    <AddAnswer QuestionId={question.id} getQuestion={getQuestion} />
+                ) : auth.isLoggedIn && question.is_closed ? (
+                    <div className="bg-gray-300 w-full text-center py-3 border border-black my-2">سوال بسته شده</div>
                 ) : (
                     <Link className="flex justify-center text-blue-500 text-2xl hover:text-blue-400" to={"/login"}>
                         برای پاسخ دادن وارد شوید
                     </Link>
                 )}
             </div>
-            
-            {answers.map(answer=>(
-                <Answer answer={answer} />
-            ))}
+            <div className="flex flex-col gap-2">
+                {question.Answers.map((answer) => (
+                    <Answer key={answer.id} answer={answer} getQuestion={getQuestion} question={question} />
+                ))}
+            </div>
         </Paper>
     );
 };
