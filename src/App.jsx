@@ -1,7 +1,7 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import Header from "./components/Header/Header";
 import { createGlobalStyle } from "styled-components";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useSearchParams } from "react-router-dom";
 import Register from "./components/Auth/Register/Register";
 import BaseRegister from "./components/Auth/Register/BaseRegister";
 import Activation from "./components/Auth/Register/Activation";
@@ -24,6 +24,8 @@ import User from "./components/Account/User";
 import NotFound from "./components/NotFound";
 import AddQuestion from "./components/Question/AddQuestion";
 import Question from "./components/Question/Question";
+import { Search } from "@mui/icons-material";
+import Questions from "./components/Question/Questions";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -132,6 +134,8 @@ const App = () => {
                 />
 
                 <Route path="questions/:slug/:id" element={<Question />} />
+                <Route path="questions" element={<Questions />} />
+
 
                 <Route path="*" element={<NotFound />} />
             </Routes>
