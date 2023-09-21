@@ -85,15 +85,15 @@ const User = () => {
         </div>
         <h1 className="text-center my-4">{user.username}</h1>
         <div className="flex flex-col items-center justify-center gap-2">
-          {auth.isLoggedIn && profile.Follower?.find((f) => f.userId == auth.userId) ? (
+          {auth.isLoggedIn && profile.Follower?.find((f) => f.UserId == auth.userId) ? (
             <Button onClick={unfollowHandler} variant="contained" color="error">
               لغو دنبال کردن
             </Button>
-          ) : auth.isLoggedIn? (
+          ) : auth.isLoggedIn && auth.userId!= profile.UserId ? (
             <Button onClick={followHandler} variant="contained">
               دنبال کردن
             </Button>
-          ):<Link className="text-blue-600" to={"/login"}>برای دنبال کردن کاربر لطفا وارد شوید</Link>}
+          ): !auth.isLoggedIn && <Link className="text-blue-600" to={"/login"}>برای دنبال کردن کاربر لطفا وارد شوید</Link>}
         </div>
         <p className="m-5 text-gray-500">
           بیوگرافی: {profile.bio || "مشخص نشده"}

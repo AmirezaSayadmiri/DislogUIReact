@@ -100,7 +100,7 @@ const Question = () => {
                 <div className="flex justify-end">
                     {question.is_closed ? (
                         <span className="text-gray-400">سوال بسته شده</span>
-                    ) : (
+                    ) :question.UserId==auth.userId && (
                         <Button variant="contained" color="warning" onClick={handleClose}>
                             بستن سوال
                         </Button>

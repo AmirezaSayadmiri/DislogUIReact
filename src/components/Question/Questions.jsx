@@ -31,7 +31,11 @@ const Questions = () => {
             const newSearch = new URLSearchParams(search);
             newSearch.set("page", 1);
             setSearch(newSearch);
-            getQuestions();
+        }
+        if (!search.get("order")) {
+            const newSearch = new URLSearchParams(search);
+            newSearch.set("order", "dateD");
+            setSearch(newSearch);
         }
         handleFilter();
         const getCategories = async () => {
@@ -59,9 +63,9 @@ const Questions = () => {
     }, [search]);
 
     const handleFilter = async () => {
-        const URL = `/questions/?page=${search.get("page") || 1}&q=${search.get("q") || ""}${search
-            .getAll("categories")
-            .map((c) => "&categories=" + c)}`
+        const URL = `/questions/?page=${search.get("page") || 1}&q=${search.get("q") || ""}&order=${
+            search.get("order") || "dateD"
+        }${search.getAll("categories").map((c) => "&categories=" + c)}`
             .replace(",", "")
             .replace(",", "");
         console.log(URL);
@@ -145,6 +149,22 @@ const Questions = () => {
             <div className="mb-10 flex flex-col gap-2">
                 <div className="flex justify-between m-4">
                     <h1 className="text-white">{text}</h1>
+
+                    <select
+                        value={search.get("order")}
+                        onChange={(e) => {
+                            const newSearch = new URLSearchParams(search);
+                            newSearch.set("order", e.target.value);
+                            newSearch.set("page", 1);
+                            setSearch(newSearch);
+                        }}
+                        className="px-2 py-1 border outline-none"
+                    >
+                        <option value="dateD">جدید ترین</option>
+                        <option value="date">قدیمی ترین</option>
+                        <option value="close">بسته شده</option>
+                        <option value="open">بسته نشده</option>
+                    </select>
                 </div>
                 {questions.length > 0 ? (
                     questions.map((question) => <QuestionItem key={question.id} question={question} />)

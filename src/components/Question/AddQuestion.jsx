@@ -167,7 +167,7 @@ const AddQuestion = () => {
 
                         <div className="flex flex-col gap-2 my-3">
                             <label htmlFor="">تگ ها:</label>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-wrap">
                                 {tags.map((tag) => (
                                     <div
                                         onClick={() => handleSelectTag(tag.id)}

@@ -26,6 +26,16 @@ import AddQuestion from "./components/Question/AddQuestion";
 import Question from "./components/Question/Question";
 import { Search } from "@mui/icons-material";
 import Questions from "./components/Question/Questions";
+import Footer from "./components/Footer";
+import Activity from "./components/Account/Dashboard/Activity";
+import IsAdmin from "./components/Auth/IsAdmin";
+import Admin from "./components/Admin/Admin";
+import AdminCategories from "./components/Admin/AdminCategories";
+import AdminTags from "./components/Admin/AdminTags";
+import AdminQuestions from "./components/Admin/AdminQuestions";
+import AdminAnswers from "./components/Admin/AdminAnswers";
+import AdminTickets from "./components/Admin/AdminTickets";
+import AdminUsers from "./components/Admin/AdminUsers";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -41,7 +51,7 @@ const App = () => {
     useEffect(() => {
         const isLoggedIn = localStorage.getItem("isLoggedIn");
         const refresh = localStorage.getItem("refresh");
-        const user = localStorage.getItem("user");
+        const user = JSON.parse(localStorage.getItem("user"));
         const userId = localStorage.getItem("userId");
         const access = localStorage.getItem("access");
         if (isLoggedIn) {
@@ -68,7 +78,7 @@ const App = () => {
                 <Route
                     path="/register"
                     element={
-                        <IsAuth guest={true}>
+                        <IsAuth guest={false}>
                             <Register />
                         </IsAuth>
                     }
@@ -120,6 +130,7 @@ const App = () => {
                     <Route index element={<Profile />} />
                     <Route path="edit" element={<DashboardEdit />} />
                     <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="activity" element={<Activity />} />
                 </Route>
 
                 <Route path="users/:username" element={<User />} />
@@ -135,10 +146,26 @@ const App = () => {
 
                 <Route path="questions/:slug/:id" element={<Question />} />
                 <Route path="questions" element={<Questions />} />
-
+                
+                <Route
+                    path="/admin"
+                    element={
+                        <IsAdmin>
+                            <Admin />
+                        </IsAdmin>
+                    }
+                >
+                    <Route path="categories" element={<AdminCategories />} />
+                    <Route path="tags" element={<AdminTags />} />
+                    <Route path="questions" element={<AdminQuestions />} />
+                    <Route path="answers" element={<AdminAnswers />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="tickets" element={<AdminTickets />} />
+                </Route>
 
                 <Route path="*" element={<NotFound />} />
             </Routes>
+            <Footer />
         </>
     );
 };

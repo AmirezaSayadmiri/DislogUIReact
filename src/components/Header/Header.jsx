@@ -88,7 +88,7 @@ const Header = () => {
                       داشبورد
                     </Button>
                     {user.role === "admin" && (
-                      <Button href="/admin">پنل ادمین</Button>
+                      <Button variant="contained" color="warning" href="/admin">پنل ادمین</Button>
                     )}
                     <Button
                       className="w-full"

@@ -51,10 +51,19 @@ const Answer = ({ answer, getQuestion, question }) => {
 
     return (
         <div className="border-2 p-10 bg-yellow-100">
-            {answer.is_selected&&(
-                <div className="flex justify-end mb-10"><Check className="bg-blue-600 rounded-full text-white" color="inherit" sx={{fontSize:"3rem"}}  /></div>
+            {answer.is_selected && (
+                <div className="flex justify-end mb-10">
+                    <Check className="bg-blue-600 rounded-full text-white" color="inherit" sx={{ fontSize: "3rem" }} />
+                </div>
             )}
-            <div className="flex justify-end">{auth.userId == question.UserId && <Button variant="contained" color="success" onClick={handleSelect} >انتخاب به عنوان بهترین پاسخ</Button>}</div>
+
+            <div className="flex justify-end">
+                {auth.userId == question.UserId && answer.UserId != auth.userId && (
+                    <Button variant="contained" color="success" onClick={handleSelect}>
+                        انتخاب به عنوان بهترین پاسخ
+                    </Button>
+                )}
+            </div>
             <div className="flex flex-col">
                 <h1 className="flex gap-2 text-gray-400">
                     پاسخ داده شده در

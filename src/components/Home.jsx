@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import privateAxios from "../api/privateAxios";
-import { Button } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import axios from "../api/axios";
 import QuestionItem from "./Question/QuestionItem";
@@ -12,6 +12,7 @@ const Home = () => {
     const [seach, setSearch] = useSearchParams();
 
     const [questions, setQuestions] = useState([]);
+    const [bestUsers, setBestUsers] = useState([]);
 
     useEffect(() => {
         const getQuestions = async () => {
@@ -19,6 +20,10 @@ const Home = () => {
                 const res = await axios.get("/questions/latest");
                 if (res.status === 200) {
                     setQuestions(res.data.questions);
+                    const res2 = await axios.get("/users/best");
+                    if (res2.status === 200) {
+                        setBestUsers(res2.data.users);
+                    }
                 }
             } catch (err) {
                 console.log(err);
@@ -56,7 +61,6 @@ const Home = () => {
                     <Search className="text-white" />
                 </div>
             </div>
-            
 
             <div className="flex items-center justify-start">
                 <Button variant="contained" href="/ask-question" color="success">
@@ -76,6 +80,19 @@ const Home = () => {
                 ) : (
                     <h1 className="text-center text-white">پرسشی بر اساس فیتلر های شما پیدا نشد</h1>
                 )}
+            </div>
+
+            <div className="my-10 flex flex-col gap-2">
+                <div className="flex m-4">
+                    <h1 className="text-white">بهترین کاربران</h1>
+                </div>
+                {bestUsers.length > 0 && bestUsers.map(user=>(
+                    <div key={user.id} className="flex text-white items-center gap-2 bg-gray-600 p-2 rounded-md">
+                        <Avatar src={user.UserProfile.image && `http://localhost:8000/${user.UserProfile.image}`} />
+                        <h1>{user.username}</h1>
+                        <h1>امتیاز: <span className="text-yellow-400">{user.UserProfile.score}</span></h1>
+                    </div>
+                ))}
             </div>
         </div>
     );
