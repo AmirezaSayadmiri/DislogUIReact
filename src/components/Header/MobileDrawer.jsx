@@ -47,6 +47,9 @@ const MobileDrawer = ({
                   <Button variant="contained" href="/dashboard" startIcon={<AccountCircle />} >
                     داشبورد
                   </Button>
+                  <Button variant="contained" href="/add-ticket" color="success" >
+                    ارسال تیکت
+                  </Button>
                   <Button variant="outlined" href="/logout" color="error">
                     خروج
                   </Button>

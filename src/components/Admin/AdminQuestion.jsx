@@ -51,7 +51,6 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
         }
     };
 
-    const handleUpdate = async () => {};
 
     const initialValues = {
         title: q.title,
@@ -138,17 +137,32 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
     };
 
     const handleDeleteImage = async () => {
-        try{
-            const res = await privateAxios.delete("/questions/"+q.id+"/image");
-            if(res.status===200){
+        try {
+            const res = await privateAxios.delete("/questions/" + q.id + "/image");
+            if (res.status === 200) {
                 showSnackBar({
                     severity: "success",
-                    value:"تصویر سوال حذف شد"
-                })
-                setOpen(false)
-                getQuestions()
+                    value: "تصویر سوال حذف شد",
+                });
+                setOpen(false);
+                getQuestions();
             }
-        }catch(err){
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleActiveQuestion = async () => {
+        try {
+            const res = await privateAxios.post("/questions/" + q.id + "/active");
+            if (res.status === 200) {
+                showSnackBar({
+                    severity: "success",
+                    value: "عملیات انجام شد",
+                });
+                getQuestions();
+            }
+        } catch (err) {
             console.log(err);
         }
     };
@@ -265,8 +279,27 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
                     <h1 className="text-gray-400">{q.body}...</h1>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <Edit className="text-yellow-500 cursor-pointer" onClick={() => setOpen(true)} />
-                    <Delete className="text-red-500 cursor-pointer" onClick={handleDelete} />
+                    {q.is_active ? (
+                        <Button onClick={handleActiveQuestion} variant="contained" color="warning">
+                            غیر فعال کردن
+                        </Button>
+                    ) : (
+                        <Button variant="contained" onClick={handleActiveQuestion}>
+                            فعال کردن
+                        </Button>
+                    )}
+                    <div
+                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
+                        onClick={() => setOpen(true)}
+                    >
+                        <Edit className="text-yellow-500 cursor-pointer" />
+                    </div>
+                    <div
+                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
+                        onClick={handleDelete}
+                    >
+                        <Delete className="text-red-500 cursor-pointer" />
+                    </div>
                 </div>
             </div>
         </>

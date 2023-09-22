@@ -41,13 +41,13 @@ const AdminCategory = ({ c, getCategories }) => {
             }
         } catch (err) {
             console.log(err);
-            dispatch(showSnackBar({ severity: "error",value:"خطایی رخ داد" }));
+            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد" }));
         }
     };
 
     const handleUpdate = async () => {
-        if(value === c.name) {
-            return setMessage("لطفا نام جدیدی انتخاب کنید")
+        if (value === c.name) {
+            return setMessage("لطفا نام جدیدی انتخاب کنید");
         }
         try {
             const res = await privateAxios.put("/categories/" + c.id, { name: value });
@@ -81,8 +81,12 @@ const AdminCategory = ({ c, getCategories }) => {
             <div key={c.id} className="border-2 p-2 bg-blue-50 flex justify-between">
                 <h1>{c.name}</h1>
                 <div className="flex gap-2">
-                    <Edit className="text-yellow-500 cursor-pointer" onClick={() => setOpen(true)} />
-                    <Delete className="text-red-500 cursor-pointer" onClick={() => handleDelete(c.id)} />
+                    <div className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300" onClick={() => setOpen(true)}>
+                        <Edit className="text-yellow-500 cursor-pointer"  />
+                    </div>
+                    <div className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300" onClick={() => handleDelete(c.id)}>
+                        <Delete className="text-red-500 cursor-pointer"  />
+                    </div>
                 </div>
             </div>
         </>

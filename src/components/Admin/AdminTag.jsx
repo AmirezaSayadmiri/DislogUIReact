@@ -41,13 +41,13 @@ const AdminTag = ({ t, getTags }) => {
             }
         } catch (err) {
             console.log(err);
-            dispatch(showSnackBar({ severity: "error",value:"خطایی رخ داد" }));
+            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد" }));
         }
     };
 
     const handleUpdate = async () => {
-        if(value === t.name) {
-            return setMessage("لطفا نام جدیدی انتخاب کنید")
+        if (value === t.name) {
+            return setMessage("لطفا نام جدیدی انتخاب کنید");
         }
         try {
             const res = await privateAxios.put("/tags/" + t.id, { name: value });
@@ -81,8 +81,18 @@ const AdminTag = ({ t, getTags }) => {
             <div key={t.id} className="border-2 p-2 bg-blue-50 flex justify-between">
                 <h1>{t.name}</h1>
                 <div className="flex gap-2">
-                    <Edit className="text-yellow-500 cursor-pointer" onClick={() => setOpen(true)} />
-                    <Delete className="text-red-500 cursor-pointer" onClick={() => handleDelete(t.id)} />
+                    <div
+                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
+                        onClick={() => setOpen(true)}
+                    >
+                        <Edit className="text-yellow-500 cursor-pointer" />
+                    </div>
+                    <div
+                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
+                        onClick={() => handleDelete(t.id)}
+                    >
+                        <Delete className="text-red-500 cursor-pointer" />
+                    </div>
                 </div>
             </div>
         </>

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import privateAxios from "../../api/privateAxios";
 import { showSnackBar } from "../../app/features/snackBar/snackBarSlice";
 import TextError from "../TextError";
-import { Modal } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import AdminCategory from "./AdminCategory";
 import AdminQuestion from "./AdminQuestion";
 
@@ -14,12 +14,13 @@ const AdminQuestions = () => {
     const [tags, setTags] = useState([]);
     const [categories, setCategories] = useState([]);
     const [message, setMessage] = useState("");
+    const [open, setOpen] = useState(true);
 
     const dispatch = useDispatch();
 
     const getQuestions = async () => {
         try {
-            const res = await axios.get("/questions");
+            const res = await privateAxios.get("/questions/all");
             if (res.status === 200) {
                 setQuestions(res.data.questions);
             }
@@ -55,7 +56,9 @@ const AdminQuestions = () => {
         getTags();
     }, []);
 
-
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div className="p-10 flex flex-col gap-2">

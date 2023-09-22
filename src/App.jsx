@@ -36,6 +36,8 @@ import AdminQuestions from "./components/Admin/AdminQuestions";
 import AdminAnswers from "./components/Admin/AdminAnswers";
 import AdminTickets from "./components/Admin/AdminTickets";
 import AdminUsers from "./components/Admin/AdminUsers";
+import AddTicket from "./components/Account/AddTicket";
+import Tickets from "./components/Account/Dashboard/Tickets";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -131,6 +133,7 @@ const App = () => {
                     <Route path="edit" element={<DashboardEdit />} />
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route path="activity" element={<Activity />} />
+                    <Route path="tickets" element={<Tickets />} />
                 </Route>
 
                 <Route path="users/:username" element={<User />} />
@@ -147,6 +150,9 @@ const App = () => {
                 <Route path="questions/:slug/:id" element={<Question />} />
                 <Route path="questions" element={<Questions />} />
                 
+                <Route path="add-ticket" element={<IsAuth guest={false} ><AddTicket /></IsAuth>} />
+
+
                 <Route
                     path="/admin"
                     element={

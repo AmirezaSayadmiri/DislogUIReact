@@ -193,7 +193,7 @@ const Question = () => {
                 )}
             </div>
             <div className="flex flex-col gap-2">
-                {question.Answers.map((answer) => (
+                {question.Answers.filter(a=>a.is_active).map((answer) => (
                     <Answer key={answer.id} answer={answer} getQuestion={getQuestion} question={question} />
                 ))}
             </div>
