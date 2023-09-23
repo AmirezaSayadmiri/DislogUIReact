@@ -1,26 +1,66 @@
-import { Delete, Edit } from "@mui/icons-material";
-import { Avatar, Box, Button, Modal, Paper } from "@mui/material";
-import React, { useRef, useState } from "react";
-import { showSnackBar } from "../../app/features/snackBar/snackBarSlice";
+import React, { useEffect, useRef, useState } from "react";
+import privateAxios from "../../../api/privateAxios";
+import { Box, Button, Modal, Paper } from "@mui/material";
 import { useDispatch } from "react-redux";
-import privateAxios from "../../api/privateAxios";
-import TextError from "../TextError";
+import { showSnackBar } from "../../../app/features/snackBar/snackBarSlice";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import TextError from "../../TextError";
 
-const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
+const MyQuestion = ({ question, getQuestions }) => {
+    const dispatch = useDispatch();
+
+    const handleDelete = async () => {
+        try {
+            const res = await privateAxios.delete("/questions/" + question.id);
+            if (res.status === 200) {
+                getQuestions();
+                dispatch(showSnackBar({ severity: "success", value: "پرسش شما حذف شد" }));
+            }
+        } catch (err) {
+            console.log(err);
+            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد" }));
+        }
+    };
+
     const [open, setOpen] = useState(false);
-    const [selectedTags, setSelectedTags] = useState(q.Tag.map((t) => t.id));
+    const [selectedTags, setSelectedTags] = useState(question.Tag.map((t) => t.id));
+    const [tags, setTags] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [tagsError, setTagsError] = useState("");
     const fileInputRef = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
-    
-    const dispatch = useDispatch();
-    
+
     const handleClose = () => {
         setOpen(false);
     };
+
+    const getCategories = async () => {
+        try {
+            const res = await privateAxios.get("/categories");
+            if (res.status === 200) {
+                setCategories(res.data.categories);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const getTags = async () => {
+        try {
+            const res = await privateAxios.get("/tags");
+            if (res.status === 200) {
+                setTags(res.data.tags);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        getCategories();
+        getTags();
+    }, []);
 
     const style = {
         position: "absolute",
@@ -37,25 +77,10 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
         gap: "5px",
     };
 
-    const handleDelete = async () => {
-        try {
-            const res = await privateAxios.delete("/questions/" + q.id);
-            console.log(res);
-            if (res.status === 200) {
-                dispatch(showSnackBar({ value: "پرسش با موفقیت حذف شد", severity: "success" }));
-                getQuestions();
-            }
-        } catch (err) {
-            console.log(err);
-            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد" }));
-        }
-    };
-
-
     const initialValues = {
-        title: q.title,
-        body: q.body,
-        CategoryId: `${q.CategoryId}`,
+        title: question.title,
+        body: question.body,
+        CategoryId: `${question.CategoryId}`,
     };
 
     const validationSchema = yup.object({
@@ -75,7 +100,12 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
             return setTagsError("لطفا حداقل دو تگ انتخاب کنید");
         }
         try {
-            const res = await privateAxios.put("/questions/" + q.id, { title, body, CategoryId, tags: selectedTags });
+            const res = await privateAxios.put("/questions/" + question.id, {
+                title,
+                body,
+                CategoryId,
+                tags: selectedTags,
+            });
             if (res.status === 200) {
                 dispatch(
                     showSnackBar({
@@ -136,7 +166,7 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
 
     const handleDeleteImage = async () => {
         try {
-            const res = await privateAxios.delete("/questions/" + q.id + "/image");
+            const res = await privateAxios.delete("/questions/" + question.id + "/image");
             if (res.status === 200) {
                 showSnackBar({
                     severity: "success",
@@ -149,24 +179,8 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
             console.log(err);
         }
     };
-
-    const handleActiveQuestion = async () => {
-        try {
-            const res = await privateAxios.post("/questions/" + q.id + "/active");
-            if (res.status === 200) {
-                showSnackBar({
-                    severity: "success",
-                    value: "عملیات انجام شد",
-                });
-                getQuestions();
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     return (
-        <>
+        <div className="border-2 bg-yellow-100 p-2 flex items-center justify-between">
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                     <Paper className="p-10 lg:mx-10 flex flex-col justify-center items-center gap-4">
@@ -240,9 +254,9 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
 
                                 <div className="">
                                     <label htmlFor="">تصویر</label>
-                                    {q.image && (
+                                    {question.image && (
                                         <div className="flex flex-col gap-4 my-4">
-                                            <img width="100%" src={`http://localhost:8000/${q.image}`} alt="" />
+                                            <img width="100%" src={`http://localhost:8000/${question.image}`} alt="" />
                                             <Button onClick={handleDeleteImage} variant="outlined" color="error">
                                                 حذف تصویر فعلی
                                             </Button>
@@ -265,43 +279,31 @@ const AdminQuestion = ({ q, getQuestions, tags, categories }) => {
                     </Paper>
                 </Box>
             </Modal>
-            <div className="border-2 p-3 bg-blue-50 flex justify-between">
-                <div className="flex items-center gap-10">
-                    <div className="flex flex-col items-center">
-                        <Avatar src={q.User.UserProfile.image && `http://localhost:8000/${q.User.UserProfile.image}`} />
-                        <h1>{q.User.username}</h1>
-                    </div>
-                    <Link to={`/questions/${q.slug}/${q.id}`} className="text-blue-500">
-                        {q.title}
-                    </Link>
-                    <h1 className="text-gray-400">{q.body}...</h1>
-                </div>
-                <div className="flex gap-2 items-center">
-                    {q.is_active ? (
-                        <Button onClick={handleActiveQuestion} variant="contained" color="warning">
-                            غیر فعال کردن
-                        </Button>
+            <div>
+                <h1>{question.title}</h1>
+                <h1>{question.body.slice(0, 4)}...</h1>
+            </div>
+            <div className="flex gap-2 items-center">
+                <div>
+                    {question.is_active ? (
+                        <h1 className="text-blue-500">منتشر شده</h1>
                     ) : (
-                        <Button variant="contained" onClick={handleActiveQuestion}>
-                            فعال کردن
+                        <h1 className="text-gray-500">در انتظار بررسی ادمین</h1>
+                    )}
+                </div>
+                <div>
+                    <Button variant="contained" onClick={()=>setOpen(true)} color="warning">ویرایش</Button>
+                </div>
+                <div>
+                    {question.is_active && (
+                        <Button onClick={() => handleDelete(question.id)} variant="contained" color="error">
+                            حذف
                         </Button>
                     )}
-                    <div
-                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
-                        onClick={() => setOpen(true)}
-                    >
-                        <Edit className="text-yellow-500 cursor-pointer" />
-                    </div>
-                    <div
-                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
-                        onClick={handleDelete}
-                    >
-                        <Delete className="text-red-500 cursor-pointer" />
-                    </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
-export default AdminQuestion;
+export default MyQuestion;

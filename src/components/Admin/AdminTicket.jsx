@@ -13,6 +13,26 @@ const AdminTicket = ({ ticket, getTickets }) => {
 
     const dispatch = useDispatch();
 
+    const [open2, setOpen2] = useState(false);
+    const handleClose2 = () => {
+        setOpen2(false);
+    };
+
+    const style2 = {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 400,
+        bgcolor: "background.paper",
+        border: "2px solid #eee",
+        boxShadow: 24,
+        p: 4,
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px",
+    };
+
     const style = {
         position: "absolute",
         top: "50%",
@@ -61,6 +81,11 @@ const AdminTicket = ({ ticket, getTickets }) => {
                     </Button>
                 </Box>
             </Modal>
+            <Modal open={open2} onClose={handleClose2}>
+                <Box sx={style2}>
+                    <p>{ticket.answer}</p>
+                </Box>
+            </Modal>
             <div>
                 <h1>عنوان: {ticket.title}</h1>
                 <p>متن: {ticket.body}</p>
@@ -72,8 +97,16 @@ const AdminTicket = ({ ticket, getTickets }) => {
                     <h1 className="bg-gray-500 p-1 text-white">پاسخ داده نشده</h1>
                 )}
             </div>
-            {ticket.answer && <p>پاسخ:{ticket.answer}</p>}
-            <Button onClick={()=>setOpen(true)} variant="contained" color="warning">پاسخ دادن</Button>
+            <div className="flex gap-2">
+                {ticket.answer && (
+                    <Button onClick={() => setOpen2(true)} variant="contained" color="inherit">
+                        نمایش پاسخ
+                    </Button>
+                )}
+                <Button onClick={() => setOpen(true)} variant="contained" color="warning">
+                    پاسخ دادن
+                </Button>
+            </div>
         </div>
     );
 };

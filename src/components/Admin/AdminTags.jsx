@@ -65,9 +65,11 @@ const AdminTags = () => {
             </div>
             <div className="flex flex-col p-2 gap-2">
                 <h1>تگ ها:</h1>
-                {tags.map((t) => (
-                    <AdminTag getTags={getTags} t={t} key={t.id} />
-                ))}
+                {tags.length > 0 ? (
+                    tags.map((t) => <AdminTag getTags={getTags} t={t} key={t.id} />)
+                ) : (
+                    <h1 className="text-center">تگی وجود ندارد</h1>
+                )}
             </div>
         </div>
     );

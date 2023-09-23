@@ -65,9 +65,19 @@ const AdminQuestions = () => {
             <div className="flex flex-col justify-center items-center mb-4 gap-1"></div>
             <div className="flex flex-col p-2 gap-2">
                 <h1>پرسش ها:</h1>
-                {questions.map((q) => (
-                    <AdminQuestion tags={tags} categories={categories} getQuestions={getQuestions} q={q} key={q.id} />
-                ))}
+                {questions.length > 0 ? (
+                    questions.map((q) => (
+                        <AdminQuestion
+                            tags={tags}
+                            categories={categories}
+                            getQuestions={getQuestions}
+                            q={q}
+                            key={q.id}
+                        />
+                    ))
+                ) : (
+                    <h1 className="text-center">پرسشی وجود ندارد</h1>
+                )}
             </div>
         </div>
     );

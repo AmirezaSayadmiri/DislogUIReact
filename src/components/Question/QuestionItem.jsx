@@ -53,7 +53,7 @@ const QuestionItem = ({ question }) => {
                 <Link to={`/questions/${question.slug}/${question.id}`} className="text-black hover:text-gray-500">
                     {question.title}
                 </Link>
-                <span className="text-[10px]">{question.body.slice(0, 10)}...</span>
+                <span className="text-[10px] text-black">{question.body.slice(0, 10)}...</span>
             </div>
         </div>
     );

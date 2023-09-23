@@ -1,20 +1,31 @@
-import { Delete, Edit } from "@mui/icons-material";
-import { Avatar, Box, Button, Modal, Paper } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { showSnackBar } from "../../app/features/snackBar/snackBarSlice";
+import { showSnackBar } from "../../../app/features/snackBar/snackBarSlice";
+import privateAxios from "../../../api/privateAxios";
 import { useDispatch } from "react-redux";
-import privateAxios from "../../api/privateAxios";
+import { Box, Button, Modal, Paper } from "@mui/material";
 import * as yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import TextError from "../TextError";
+import TextError from "../../TextError";
 
-const AdminAnswer = ({ answer, getAnswers }) => {
+const MyAnswer = ({ answer, getAnswers }) => {
+    const dispatch = useDispatch();
+
+    const handleDelete = async () => {
+        try {
+            const res = await privateAxios.delete("/answers/" + answer.id);
+            if (res.status === 200) {
+                getAnswers();
+                dispatch(showSnackBar({ severity: "success", value: "پاسخ شما حذف شد" }));
+            }
+        } catch (err) {
+            console.log(err);
+            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد" }));
+        }
+    };
+    const [open, setOpen] = useState(false);
     const fileInputRef = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
-    
-    const dispatch = useDispatch();
-    
-    const [open, setOpen] = useState(false);
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -34,19 +45,6 @@ const AdminAnswer = ({ answer, getAnswers }) => {
         gap: "5px",
     };
 
-    const handleDelete = async () => {
-        try {
-            const res = await privateAxios.delete("/answers/" + answer.id);
-            console.log(res);
-            if (res.status === 200) {
-                dispatch(showSnackBar({ value: "پاسخ با موفقیت حذف شد", severity: "success" }));
-                getAnswers();
-            }
-        } catch (err) {
-            console.log(err);
-            dispatch(showSnackBar({ severity: "error", value: "خطایی رخ داد" }));
-        }
-    };
     const initialValues = {
         body: answer.body,
     };
@@ -115,23 +113,8 @@ const AdminAnswer = ({ answer, getAnswers }) => {
         }
     };
 
-    const handleActiveAnswer = async () => {
-        try {
-            const res = await privateAxios.post("/answers/" + answer.id + "/active");
-            if (res.status === 200) {
-                showSnackBar({
-                    severity: "success",
-                    value: "عملیات انجام شد",
-                });
-                getAnswers();
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     return (
-        <>
+        <div className="border-2 bg-yellow-100 p-2 flex items-center justify-between">
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                     <Paper className="p-10 lg:mx-10 flex flex-col justify-center items-center gap-4">
@@ -170,42 +153,33 @@ const AdminAnswer = ({ answer, getAnswers }) => {
                     </Paper>
                 </Box>
             </Modal>
-            <div key={answer.id} className="flex border-2 p-2 items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <Avatar
-                        src={answer.User.UserProfile.image && `http://localhost:8000/${answer.User.UserProfile.image}`}
-                    />
-                    <h1>{answer.User.username}</h1>
+            <div>
+                <h1>{answer.body.slice(0, 4)}...</h1>
+            </div>
+            <div className="text-gray-700">سوال: {answer.Question.title}</div>
+            <div className="flex gap-4 items-center">
+                <div>
+                    {answer.is_active ? (
+                        <h1 className="text-blue-500">منتشر شده</h1>
+                    ) : (
+                        <h1 className="text-gray-500">در انتظار بررسی ادمین</h1>
+                    )}
                 </div>
-                <h1>{answer.body}</h1>
-                <div className="flex gap-1">
-                    <div>
-                        {answer.is_active ? (
-                            <Button onClick={handleActiveAnswer} variant="contained" color="warning">
-                                غیر فعال کردن
-                            </Button>
-                        ) : (
-                            <Button onClick={handleActiveAnswer} variant="contained">
-                                فعال کردن
-                            </Button>
-                        )}
-                    </div>
-                    <div
-                        onClick={() => setOpen(true)}
-                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
-                    >
-                        <Edit className="text-yellow-500" />
-                    </div>
-                    <div
-                        onClick={handleDelete}
-                        className="cursor-pointer border-2 p-1 border-gray-400 hover:bg-gray-300"
-                    >
-                        <Delete className="text-red-500" />
-                    </div>
+                <div>
+                    <Button onClick={() => setOpen(true)} variant="contained" color="warning">
+                        ویرایش
+                    </Button>
+                </div>
+                <div>
+                    {answer.is_active && (
+                        <Button onClick={handleDelete} variant="contained" color="error">
+                            حذف
+                        </Button>
+                    )}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
-export default AdminAnswer;
+export default MyAnswer;

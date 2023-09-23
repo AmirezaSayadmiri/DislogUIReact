@@ -6,6 +6,7 @@ import { Button, Paper } from "@mui/material";
 import privateAxios from "../../api/privateAxios";
 import { useDispatch } from "react-redux";
 import { showSnackBar } from "../../app/features/snackBar/snackBarSlice";
+import { useNavigate } from "react-router-dom";
 
 const AddTicket = () => {
     const initialValues = {
@@ -14,6 +15,7 @@ const AddTicket = () => {
     };
 
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const validationSchema = yup.object({
         title: yup.string().required("لطفا موضوع سوال خود را وارد کنید"),
@@ -28,6 +30,7 @@ const AddTicket = () => {
             });
             if(res.status===200){
                 dispatch(showSnackBar({value:"تیکت شما ثبت شد",severity:"success"}))
+                navigate("/")
             }
         } catch (err) {
             console.log(err);
@@ -36,7 +39,7 @@ const AddTicket = () => {
     };
 
     return (
-        <Paper className="p-10">
+        <Paper className="p-10 m-10">
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                 <Form className="flex  gap-2 flex-col items-center justify-center">
                     <div className="flex flex-col gap-1">

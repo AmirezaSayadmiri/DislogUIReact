@@ -24,9 +24,11 @@ const AdminAnswers = () => {
 
     return (
         <div className="p-10 my-10 gap-2 flex flex-col">
-            {answers.map((answer) => (
-                <AdminAnswer key={answer.id} getAnswers={getAnswers} answer={answer} />
-            ))}
+            {answers.length > 0 ? (
+                answers.map((answer) => <AdminAnswer key={answer.id} getAnswers={getAnswers} answer={answer} />)
+            ) : (
+                <h1 className="text-center">پاسخی وجود ندارد</h1>
+            )}
         </div>
     );
 };

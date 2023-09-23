@@ -40,9 +40,25 @@ const Dashboard = () => {
                                 <Link to="/dashboard">تغییر رمز عبور</Link>
                             </li>
                             <li
+                                onClick={() => navigate("/dashboard/questions")}
+                                className={`text-center flex justify-center gap-1 py-4 border border-2 transition-all hover:bg-blue-950 hover:text-white ${
+                                    location.pathname === "/dashboard/questions" ? "bg-blue-950 text-white" : ""
+                                }`}
+                            >
+                                <Link to="/dashboard">پرسش های من</Link>
+                            </li>
+                            <li
+                                onClick={() => navigate("/dashboard/answers")}
+                                className={`text-center flex justify-center gap-1 py-4 border border-2 transition-all hover:bg-blue-950 hover:text-white ${
+                                    location.pathname === "/dashboard/answers" ? "bg-blue-950 text-white" : ""
+                                }`}
+                            >
+                                <Link to="/dashboard">پاسخ های من</Link>
+                            </li>
+                            <li
                                 onClick={() => navigate("/dashboard/activity")}
                                 className={`text-center flex justify-center gap-1 py-4 border border-2 transition-all hover:bg-blue-950 hover:text-white ${
-                                    location.pathname === "/dashboard/change-password" ? "bg-blue-950 text-white" : ""
+                                    location.pathname === "/dashboard/activity" ? "bg-blue-950 text-white" : ""
                                 }`}
                             >
                                 <Link to="/dashboard">فعالیت</Link>

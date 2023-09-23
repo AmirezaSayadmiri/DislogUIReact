@@ -24,7 +24,7 @@ import User from "./components/Account/User";
 import NotFound from "./components/NotFound";
 import AddQuestion from "./components/Question/AddQuestion";
 import Question from "./components/Question/Question";
-import { Search } from "@mui/icons-material";
+import {  Search } from "@mui/icons-material";
 import Questions from "./components/Question/Questions";
 import Footer from "./components/Footer";
 import Activity from "./components/Account/Dashboard/Activity";
@@ -38,6 +38,12 @@ import AdminTickets from "./components/Admin/AdminTickets";
 import AdminUsers from "./components/Admin/AdminUsers";
 import AddTicket from "./components/Account/AddTicket";
 import Tickets from "./components/Account/Dashboard/Tickets";
+import Categories from "./components/Category/Categories";
+import Tags from "./components/Tag/Tags";
+import Category from "./components/Category/Category";
+import Tag from "./components/Tag/Tag";
+import MyQuestions from "./components/Account/Dashboard/MyQuestions";
+import MyAnswers from "./components/Account/Dashboard/MyAnswers";
 
 const GlobalStyles = createGlobalStyle`
 body{
@@ -134,6 +140,8 @@ const App = () => {
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route path="activity" element={<Activity />} />
                     <Route path="tickets" element={<Tickets />} />
+                    <Route path="questions" element={<MyQuestions />} />
+                    <Route path="answers" element={<MyAnswers />} />
                 </Route>
 
                 <Route path="users/:username" element={<User />} />
@@ -168,6 +176,11 @@ const App = () => {
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="tickets" element={<AdminTickets />} />
                 </Route>
+
+                <Route path="categories" element={<Categories />} />
+                <Route path="categories/:id" element={<Category />} />
+                <Route path="tags" element={<Tags />} />
+                <Route path="tags/:id" element={<Tag />} />
 
                 <Route path="*" element={<NotFound />} />
             </Routes>

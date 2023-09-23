@@ -30,8 +30,6 @@ const AdminCategories = () => {
         getCategories();
     }, []);
 
-
-
     const handleAddCategory = async () => {
         try {
             const res = await privateAxios.post("/categories/", {
@@ -67,9 +65,11 @@ const AdminCategories = () => {
             </div>
             <div className="flex flex-col p-2 gap-2">
                 <h1>دسته بندی ها:</h1>
-                {categories.map((c) => (
-                    <AdminCategory getCategories={getCategories} c={c} key={c.id} />
-                ))}
+                {categories.length > 0 ? (
+                    categories.map((c) => <AdminCategory getCategories={getCategories} c={c} key={c.id} />)
+                ) : (
+                    <h1 className="text-center">دسته بندی وجود ندارد</h1>
+                )}
             </div>
         </div>
     );
