@@ -124,7 +124,7 @@ const Question = () => {
                     </div>
                     <div className="flex gap-1 items-center text-gray-400">
                         دسته بندی:
-                        <span className="">{question.Category.name}</span>
+                        <Link to={"/categories/"+question.CategoryId} className="hover:text-blue-500">{question.Category.name}</Link>
                     </div>
                 </div>
                 <div className="flex mb-5 justify-end">
@@ -170,12 +170,13 @@ const Question = () => {
                     <h1>تگ ها:</h1>
                     <div className="flex gap-1">
                         {question.Tag.map((tag) => (
-                            <span
+                            <Link
                                 key={tag.id}
-                                className="border-2 w-[90px] text-center bg-yellow-200 px-2 py-1 text-black"
+                                to={"/tags/"+tag.id}
+                                className="border-2 hover:bg-yellow-100 w-[90px] text-center bg-yellow-200 px-2 py-1 text-black"
                             >
                                 {tag.name}
-                            </span>
+                            </Link>
                         ))}
                     </div>
                 </div>
