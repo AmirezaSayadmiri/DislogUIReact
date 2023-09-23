@@ -3,7 +3,7 @@ import React from "react";
 
 const NotFound = () => {
   return (
-    <Paper className="p-10 flex justify-center items-center">
+    <Paper className="p-10 flex justify-center items-center m-10">
       <div>NotFound</div>
     </Paper>
   );

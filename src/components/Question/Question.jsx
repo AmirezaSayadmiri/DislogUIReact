@@ -156,7 +156,7 @@ const Question = () => {
                             `http://localhost:8000/${question.User.UserProfile.image}`
                         }
                     />
-                    <h1>{question.User.username}</h1>
+                    <Link className="hover:text-blue-500" to={"/users/"+question.User.username}>{question.User.username}</Link>
                 </div>
 
                 <div className="my-4 flex flex-col justify-center items-center gap-2">

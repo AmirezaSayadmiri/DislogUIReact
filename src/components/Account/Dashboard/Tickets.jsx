@@ -19,10 +19,16 @@ const Tickets = () => {
         getTickets();
     }, []);
 
-    return <div className="p-10 flex flex-col">
-        <h1>تیکت های شما:</h1>
-        {tickets.map(ticket=><Ticket key={ticket.id} ticket={ticket} />)}
-    </div>;
+    return (
+        <div className="p-10 flex flex-col">
+            <h1>تیکت های شما:</h1>
+            {tickets.length > 0 ? (
+                tickets.map((ticket) => <Ticket key={ticket.id} ticket={ticket} />)
+            ) : (
+                <h1 className="text-center">تیکتی وجود ندارد</h1>
+            )}
+        </div>
+    );
 };
 
 export default Tickets;

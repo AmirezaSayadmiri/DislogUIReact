@@ -85,6 +85,7 @@ const User = () => {
         </div>
         <h1 className="text-center my-4">{user.username}</h1>
         <div className="flex flex-col items-center justify-center gap-2">
+          <div className="p-2 border-2 text-blue-500">{profile.Follower?.length} دنبال کننده</div>
           {auth.isLoggedIn && profile.Follower?.find((f) => f.UserId == auth.userId) ? (
             <Button onClick={unfollowHandler} variant="contained" color="error">
               لغو دنبال کردن

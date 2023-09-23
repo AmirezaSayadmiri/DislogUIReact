@@ -48,7 +48,7 @@ const QuestionItem = ({ question }) => {
                             `http://localhost:8000/${question.User.UserProfile.image}`
                         }
                     />
-                    <span className="text-gray-500">{question.User.username}</span>
+                    <span className="text-gray-500 hover:text-blue-500"><Link to={"/users/"+question.User.username}>{question.User.username}</Link></span>
                 </div>
                 <Link to={`/questions/${question.slug}/${question.id}`} className="text-black hover:text-gray-500">
                     {question.title}
